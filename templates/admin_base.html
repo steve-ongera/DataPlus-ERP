@@ -1090,27 +1090,7 @@
         
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Page header -->
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h1>
-                <p class="text-gray-600 mt-1">{% block page_subtitle %}Welcome to DataPlus ERP System{% endblock %}</p>
-            </div>
-            
-            <!-- Breadcrumbs -->
-            {% block breadcrumbs %}
-            <nav class="flex mb-6" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center">
-                        <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                            <i class="fas fa-home mr-2"></i>
-                            Home
-                        </a>
-                    </li>
-                    {% block breadcrumb_items %}{% endblock %}
-                </ol>
-            </nav>
-            {% endblock %}
-            
+           
             <!-- Messages/Notifications -->
             {% if messages %}
             <div class="mb-6">
