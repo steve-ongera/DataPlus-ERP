@@ -1,0 +1,1590 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DataPlus ERP - Enterprise Resource Planning{% endblock %}</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Styles -->
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --sidebar-width: 260px;
+            --sidebar-collapsed: 70px;
+            --header-height: 70px;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* ====================
+           HEADER / NAVBAR
+           ==================== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: white;
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: all 0.2s;
+            margin-right: 1rem;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--dark-color);
+        }
+        
+        .logo-text .highlight {
+            color: var(--primary-color);
+        }
+        
+        .header-search {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            z-index: 2;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background-color: #f8fafc;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+        
+        .header-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .header-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--dark-color);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .user-profile:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: 600;
+            overflow: hidden;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-color);
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+        
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+        
+        /* ====================
+           SIDEBAR
+           ==================== */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            box-shadow: var(--shadow-sm);
+            z-index: 999;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .menu-item {
+            margin-bottom: 0.25rem;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        .menu-link:hover {
+            background-color: #f8fafc;
+            color: var(--primary-color);
+        }
+        
+        .menu-link.active {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-weight: 500;
+            border-right: 3px solid var(--primary-color);
+        }
+        
+        .menu-icon {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+            margin-right: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .sidebar.collapsed .menu-icon {
+            margin-right: 0;
+        }
+        
+        .menu-text {
+            transition: all 0.3s;
+            opacity: 1;
+        }
+        
+        .sidebar.collapsed .menu-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        
+        .menu-arrow {
+            margin-left: auto;
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        
+        .menu-arrow.rotated {
+            transform: rotate(90deg);
+        }
+        
+        .submenu {
+            list-style: none;
+            padding-left: 3.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .submenu.expanded {
+            max-height: 500px;
+        }
+        
+        .submenu-item {
+            margin-bottom: 0.25rem;
+        }
+        
+        .submenu-link {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: var(--border-radius);
+            transition: all 0.2s;
+        }
+        
+        .submenu-link:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+        
+        .submenu-link.active {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .sidebar.collapsed .submenu {
+            display: none;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 1rem 1.5rem;
+        }
+        
+        .menu-label {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .sidebar.collapsed .menu-label {
+            display: none;
+        }
+        
+        /* ====================
+           MAIN CONTENT AREA
+           ==================== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        .main-content.expanded {
+            margin-left: var(--sidebar-collapsed);
+        }
+        
+        /* ====================
+           DROPDOWNS
+           ==================== */
+        .dropdown-container {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            min-width: 300px;
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s;
+        }
+        
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dropdown-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .dropdown-link {
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+        
+        .dropdown-link:hover {
+            text-decoration: underline;
+        }
+        
+        .dropdown-items {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8fafc;
+        }
+        
+        .dropdown-item.unread {
+            background-color: var(--primary-light);
+        }
+        
+        .dropdown-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+        
+        .dropdown-content {
+            flex: 1;
+        }
+        
+        .dropdown-content-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .dropdown-content-text {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            line-height: 1.4;
+        }
+        
+        .dropdown-content-time {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        
+        .dropdown-footer {
+            padding: 0.75rem;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .profile-dropdown {
+            min-width: 250px;
+        }
+        
+        .profile-dropdown-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .profile-dropdown-info {
+            flex: 1;
+        }
+        
+        .profile-dropdown-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-dropdown-email {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+        
+        .profile-dropdown-items {
+            padding: 0.5rem 0;
+        }
+        
+        .profile-dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .profile-dropdown-item:hover {
+            background-color: #f8fafc;
+            color: var(--primary-color);
+        }
+        
+        .profile-dropdown-icon {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        /* ====================
+           RESPONSIVE DESIGN
+           ==================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.expanded {
+                margin-left: 0;
+            }
+            
+            .header-search {
+                max-width: 300px;
+                margin: 0 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-search {
+                display: none;
+            }
+            
+            .logo-text span:not(.highlight) {
+                display: none;
+            }
+        }
+        
+        /* ====================
+           UTILITY CLASSES
+           ==================== */
+        .text-primary { color: var(--primary-color); }
+        .text-success { color: var(--success-color); }
+        .text-warning { color: var(--warning-color); }
+        .text-danger { color: var(--danger-color); }
+        .text-muted { color: var(--secondary-color); }
+        
+        .bg-primary { background-color: var(--primary-color); }
+        .bg-success { background-color: var(--success-color); }
+        .bg-warning { background-color: var(--warning-color); }
+        .bg-danger { background-color: var(--danger-color); }
+        .bg-light { background-color: var(--light-color); }
+        
+        .rounded { border-radius: var(--border-radius); }
+        .shadow { box-shadow: var(--shadow-md); }
+        .shadow-lg { box-shadow: var(--shadow-lg); }
+        
+        .d-none { display: none; }
+        .d-flex { display: flex; }
+        .d-block { display: block; }
+        
+        .w-100 { width: 100%; }
+        .h-100 { height: 100%; }
+        
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        
+        .p-1 { padding: 0.25rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 1rem; }
+        
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        
+        .fw-bold { font-weight: 700; }
+        .fw-medium { font-weight: 600; }
+        .fw-normal { font-weight: 400; }
+        
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header/Navbar -->
+        <header class="header">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="logo-container">
+                <div class="logo">DP</div>
+                <div class="logo-text"><span class="highlight">Data</span><span>Plus ERP</span></div>
+            </div>
+            
+            <div class="header-search">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search modules, reports, or users...">
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <!-- Notification Dropdown -->
+                <div class="dropdown-container">
+                    <button class="header-btn" id="notificationBtn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <div class="dropdown-menu" id="notificationDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-title">Notifications</div>
+                            <a href="#" class="dropdown-link">Mark all as read</a>
+                        </div>
+                        <div class="dropdown-items">
+                            <!-- Notification items will be populated dynamically -->
+                            <div class="dropdown-item unread">
+                                <div class="dropdown-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-content-title">Price Collection Report Ready</div>
+                                    <div class="dropdown-content-text">Monthly price collection report for Q4 2023 is now available for review.</div>
+                                    <div class="dropdown-content-time">10 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="dropdown-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-content-title">New User Registration</div>
+                                    <div class="dropdown-content-text">John Doe has registered and is awaiting approval.</div>
+                                    <div class="dropdown-content-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="dropdown-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-content-title">Data Quality Alert</div>
+                                    <div class="dropdown-content-text">3 outlets have missing price entries for the current period.</div>
+                                    <div class="dropdown-content-time">5 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown-footer">
+                            <a href="{% url 'notifications' %}" class="dropdown-link">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Messages Dropdown -->
+                <div class="dropdown-container">
+                    <button class="header-btn" id="messageBtn">
+                        <i class="far fa-envelope"></i>
+                        <span class="badge">5</span>
+                    </button>
+                    <div class="dropdown-menu" id="messageDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-title">Messages</div>
+                            <a href="#" class="dropdown-link">View All</a>
+                        </div>
+                        <div class="dropdown-items">
+                            <!-- Message items will be populated dynamically -->
+                            <div class="dropdown-item unread">
+                                <div class="dropdown-icon">
+                                    <img src="{% if user.profile_photo %}{{ user.profile_photo.url }}{% else %}https://ui-avatars.com/api/?name=Manager&background=2563eb&color=fff{% endif %}" alt="User" class="profile-image" style="width: 40px; height: 40px;">
+                                </div>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-content-title">Regional Manager</div>
+                                    <div class="dropdown-content-text">Please review the submitted price entries for Zone 5A by EOD.</div>
+                                    <div class="dropdown-content-time">Just now</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div class="dropdown-icon">
+                                    <img src="https://ui-avatars.com/api/?name=Support&background=10b981&color=fff" alt="User" class="profile-image" style="width: 40px; height: 40px;">
+                                </div>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-content-title">IT Support</div>
+                                    <div class="dropdown-content-text">Your requested report has been generated and is available for download.</div>
+                                    <div class="dropdown-content-time">Yesterday</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown-footer">
+                            <a href="{% url 'messages' %}" class="dropdown-link">Go to Messages</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Dropdown -->
+                <div class="dropdown-container">
+                    <div class="user-profile" id="profileBtn">
+                        <div class="profile-image">
+                            {% if user.profile_photo %}
+                                <img src="{{ user.profile_photo.url }}" alt="{{ user.get_full_name }}">
+                            {% else %}
+                                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                            {% endif %}
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
+                            <div class="user-role">{{ user.get_role_display }}</div>
+                        </div>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </div>
+                    <div class="dropdown-menu profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div class="profile-image">
+                                {% if user.profile_photo %}
+                                    <img src="{{ user.profile_photo.url }}" alt="{{ user.get_full_name }}">
+                                {% else %}
+                                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                                {% endif %}
+                            </div>
+                            <div class="profile-dropdown-info">
+                                <div class="profile-dropdown-name">{{ user.get_full_name|default:user.username }}</div>
+                                <div class="profile-dropdown-email">{{ user.email }}</div>
+                                <div class="dropdown-content-time">{{ user.department.name|default:"No Department" }}</div>
+                            </div>
+                        </div>
+                        <div class="profile-dropdown-items">
+                            <a href="{% url 'user_profile' user.id %}" class="profile-dropdown-item">
+                                <i class="fas fa-user profile-dropdown-icon"></i>
+                                <span>My Profile</span>
+                            </a>
+                            <a href="{% url 'settings' %}" class="profile-dropdown-item">
+                                <i class="fas fa-cog profile-dropdown-icon"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="{% url 'user_training' %}" class="profile-dropdown-item">
+                                <i class="fas fa-graduation-cap profile-dropdown-icon"></i>
+                                <span>Training</span>
+                            </a>
+                            <a href="{% url 'help' %}" class="profile-dropdown-item">
+                                <i class="fas fa-question-circle profile-dropdown-icon"></i>
+                                <span>Help & Support</span>
+                            </a>
+                            <div class="sidebar-divider"></div>
+                            <a href="{% url 'logout' %}" class="profile-dropdown-item">
+                                <i class="fas fa-sign-out-alt profile-dropdown-icon"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-label">Main Navigation</li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt menu-icon"></i>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="priceMenu">
+                        <i class="fas fa-chart-line menu-icon"></i>
+                        <span class="menu-text">Price Management</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="priceSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'price_entry_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'price_entry_list' %}active{% endif %}">
+                                Price Collection
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'price_evidence_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'price_evidence_list' %}active{% endif %}">
+                                Price Evidence
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'price_period_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'price_period_list' %}active{% endif %}">
+                                Survey Periods
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'outlet_product_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'outlet_product_list' %}active{% endif %}">
+                                Outlet Products
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="outletMenu">
+                        <i class="fas fa-store menu-icon"></i>
+                        <span class="menu-text">Outlet Management</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="outletSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'outlet_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'outlet_list' %}active{% endif %}">
+                                All Outlets
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'outlet_type_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'outlet_type_list' %}active{% endif %}">
+                                Outlet Types
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'zone_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'zone_list' %}active{% endif %}">
+                                Geographical Zones
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'basket_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'basket_list' %}active{% endif %}">
+                                Baskets
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="productMenu">
+                        <i class="fas fa-boxes menu-icon"></i>
+                        <span class="menu-text">Product Catalog</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="productSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'product_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
+                                All Products
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'coicop_category_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'coicop_category_list' %}active{% endif %}">
+                                COICOP Classification
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'division_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'division_list' %}active{% endif %}">
+                                Divisions
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="documentMenu">
+                        <i class="fas fa-folder menu-icon"></i>
+                        <span class="menu-text">Document Management</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="documentSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'document_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'document_list' %}active{% endif %}">
+                                All Documents
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'document_category_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'document_category_list' %}active{% endif %}">
+                                Categories
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'invoice_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'invoice_list' %}active{% endif %}">
+                                Invoices
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="#" class="submenu-link">
+                                Contracts
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="financialMenu">
+                        <i class="fas fa-money-bill-wave menu-icon"></i>
+                        <span class="menu-text">Financial Management</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="financialSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'budget_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'budget_list' %}active{% endif %}">
+                                Budgets
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'invoice_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'invoice_list' %}active{% endif %}">
+                                Invoices
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'payment_report' %}" class="submenu-link">
+                                Payment Reports
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="{% url 'workflow_list' %}" class="menu-link {% if request.resolver_match.url_name == 'workflow_list' %}active{% endif %}">
+                        <i class="fas fa-tasks menu-icon"></i>
+                        <span class="menu-text">Workflows & Approvals</span>
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="{% url 'report_list' %}" class="menu-link {% if request.resolver_match.url_name == 'report_list' %}active{% endif %}">
+                        <i class="fas fa-chart-bar menu-icon"></i>
+                        <span class="menu-text">Reports & Analytics</span>
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="{% url 'training_list' %}" class="menu-link {% if request.resolver_match.url_name == 'training_list' %}active{% endif %}">
+                        <i class="fas fa-graduation-cap menu-icon"></i>
+                        <span class="menu-text">Training</span>
+                    </a>
+                </li>
+                
+                <div class="sidebar-divider"></div>
+                
+                <li class="menu-label">System Administration</li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="adminMenu">
+                        <i class="fas fa-users-cog menu-icon"></i>
+                        <span class="menu-text">User Management</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="adminSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'user_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}">
+                                All Users
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'department_list' %}" class="submenu-link {% if request.resolver_match.url_name == 'department_list' %}active{% endif %}">
+                                Departments
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'role_permissions' %}" class="submenu-link">
+                                Role Permissions
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'audit_logs' %}" class="submenu-link {% if request.resolver_match.url_name == 'audit_logs' %}active{% endif %}">
+                                Audit Logs
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="systemMenu">
+                        <i class="fas fa-cogs menu-icon"></i>
+                        <span class="menu-text">System Configuration</span>
+                        <i class="fas fa-chevron-right menu-arrow"></i>
+                    </a>
+                    <ul class="submenu" id="systemSubmenu">
+                        <li class="submenu-item">
+                            <a href="{% url 'system_configuration' %}" class="submenu-link {% if request.resolver_match.url_name == 'system_configuration' %}active{% endif %}">
+                                Configuration Settings
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'data_quality_checks' %}" class="submenu-link">
+                                Data Quality Rules
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'external_integrations' %}" class="submenu-link">
+                                External Integrations
+                            </a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="{% url 'api_keys' %}" class="submenu-link">
+                                API Keys
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="{% url 'help' %}" class="menu-link">
+                        <i class="fas fa-question-circle menu-icon"></i>
+                        <span class="menu-text">Help & Support</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Page header -->
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h1>
+                <p class="text-gray-600 mt-1">{% block page_subtitle %}Welcome to DataPlus ERP System{% endblock %}</p>
+            </div>
+            
+            <!-- Breadcrumbs -->
+            {% block breadcrumbs %}
+            <nav class="flex mb-6" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-home mr-2"></i>
+                            Home
+                        </a>
+                    </li>
+                    {% block breadcrumb_items %}{% endblock %}
+                </ol>
+            </nav>
+            {% endblock %}
+            
+            <!-- Messages/Notifications -->
+            {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                <div class="p-4 mb-3 rounded-lg {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% elif message.tags == 'warning' %}bg-yellow-50 text-yellow-800 border border-yellow-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                    <div class="flex items-center">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} mr-3"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Content -->
+            {% block content %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Example content cards -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-gray-800">Price Collection Status</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Today</span>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900">78%</div>
+                    <p class="text-gray-600 mt-2">Completion rate for current period</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-3">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 78%"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-gray-800">Pending Approvals</h3>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">12 items</span>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900">12</div>
+                    <p class="text-gray-600 mt-2">Require your attention</p>
+                    <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800 mt-3">
+                        Review now
+                        <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-gray-800">Active Users</h3>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Online</span>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900">42</div>
+                    <p class="text-gray-600 mt-2">Currently using the system</p>
+                    <div class="flex -space-x-2 mt-3">
+                        {% for i in "12345" %}
+                        <div class="w-8 h-8 rounded-full bg-blue-100 border-2 border-white"></div>
+                        {% endfor %}
+                        <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs">+37</div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+            
+            <!-- Footer -->
+            <footer class="mt-8 pt-6 border-t border-gray-200 text-center text-gray-600 text-sm">
+                <p>DataPlus ERP v2.0 • © {% now "Y" %} Enterprise Resource Planning System</p>
+                <p class="mt-1">Advanced Statistical Data Collection & Analysis Platform</p>
+            </footer>
+        </main>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // ====================
+        // SIDEBAR TOGGLE FUNCTIONS
+        // ====================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            // Toggle sidebar on button click
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+                
+                // For mobile, show/hide overlay
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.toggle('mobile-open');
+                    sidebarOverlay.classList.toggle('show');
+                }
+            });
+            
+            // Close sidebar on overlay click (mobile)
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('show');
+            });
+            
+            // Auto-collapse sidebar on mobile by default
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+            }
+            
+            // ====================
+            // SUBMENU TOGGLE FUNCTIONS
+            // ====================
+            
+            // Define submenu toggle functions
+            const submenuConfig = {
+                'priceMenu': 'priceSubmenu',
+                'outletMenu': 'outletSubmenu',
+                'productMenu': 'productSubmenu',
+                'documentMenu': 'documentSubmenu',
+                'financialMenu': 'financialSubmenu',
+                'adminMenu': 'adminSubmenu',
+                'systemMenu': 'systemSubmenu'
+            };
+            
+            // Initialize submenus
+            Object.keys(submenuConfig).forEach(menuId => {
+                const menuButton = document.getElementById(menuId);
+                const submenuId = submenuConfig[menuId];
+                const submenu = document.getElementById(submenuId);
+                const arrow = menuButton.querySelector('.menu-arrow');
+                
+                if (menuButton && submenu) {
+                    // Check if current page is in this submenu
+                    const activeLink = submenu.querySelector('.submenu-link.active');
+                    if (activeLink) {
+                        submenu.classList.add('expanded');
+                        if (arrow) arrow.classList.add('rotated');
+                    }
+                    
+                    // Toggle submenu on click
+                    menuButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Don't toggle if sidebar is collapsed on desktop
+                        if (sidebar.classList.contains('collapsed') && window.innerWidth > 1024) {
+                            return;
+                        }
+                        
+                        // Toggle submenu
+                        submenu.classList.toggle('expanded');
+                        if (arrow) arrow.classList.toggle('rotated');
+                    });
+                }
+            });
+            
+            // ====================
+            // DROPDOWN FUNCTIONS
+            // ====================
+            
+            // Notification dropdown
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            // Messages dropdown
+            const messageBtn = document.getElementById('messageBtn');
+            const messageDropdown = document.getElementById('messageDropdown');
+            
+            // Profile dropdown
+            const profileBtn = document.getElementById('profileBtn');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            // Track active dropdown
+            let activeDropdown = null;
+            
+            // Toggle dropdown function
+            function toggleDropdown(dropdown) {
+                // Close any other open dropdowns
+                if (activeDropdown && activeDropdown !== dropdown) {
+                    activeDropdown.classList.remove('show');
+                }
+                
+                // Toggle current dropdown
+                dropdown.classList.toggle('show');
+                
+                // Update active dropdown
+                if (dropdown.classList.contains('show')) {
+                    activeDropdown = dropdown;
+                } else {
+                    activeDropdown = null;
+                }
+            }
+            
+            // Set up dropdown toggles
+            if (notificationBtn && notificationDropdown) {
+                notificationBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleDropdown(notificationDropdown);
+                });
+            }
+            
+            if (messageBtn && messageDropdown) {
+                messageBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleDropdown(messageDropdown);
+                });
+            }
+            
+            if (profileBtn && profileDropdown) {
+                profileBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleDropdown(profileDropdown);
+                });
+            }
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function() {
+                if (activeDropdown) {
+                    activeDropdown.classList.remove('show');
+                    activeDropdown = null;
+                }
+            });
+            
+            // Prevent dropdowns from closing when clicking inside them
+            document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+            
+            // ====================
+            // SEARCH FUNCTIONALITY
+            // ====================
+            
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        // Implement search functionality
+                        const query = this.value.trim();
+                        if (query) {
+                            console.log('Searching for:', query);
+                            // You would typically make an AJAX request here
+                            // or redirect to search results page
+                        }
+                    }
+                });
+            }
+            
+            // ====================
+            // RESPONSIVE BEHAVIOR
+            // ====================
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 1024) {
+                    // Desktop: hide mobile overlay
+                    sidebarOverlay.classList.remove('show');
+                    sidebar.classList.remove('mobile-open');
+                } else {
+                    // Mobile: collapse sidebar if expanded
+                    if (!sidebar.classList.contains('mobile-open')) {
+                        sidebar.classList.remove('collapsed');
+                        mainContent.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // ====================
+            // ACTIVE LINK HIGHLIGHTING
+            // ====================
+            
+            // Set active state for current page in sidebar
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.menu-link, .submenu-link').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                    
+                    // If it's a submenu link, expand parent menu
+                    if (link.classList.contains('submenu-link')) {
+                        const parentMenu = link.closest('.submenu');
+                        if (parentMenu) {
+                            parentMenu.classList.add('expanded');
+                            const menuArrow = parentMenu.previousElementSibling?.querySelector('.menu-arrow');
+                            if (menuArrow) menuArrow.classList.add('rotated');
+                        }
+                    }
+                }
+            });
+            
+            // ====================
+            // PROFILE IMAGE FALLBACK
+            // ====================
+            
+            // Handle broken profile images
+            document.querySelectorAll('.profile-image img').forEach(img => {
+                img.addEventListener('error', function() {
+                    const parent = this.parentElement;
+                    const userName = parent.dataset.name || 'User';
+                    const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                    
+                    // Replace with initials
+                    parent.innerHTML = initials;
+                    parent.style.backgroundColor = '#2563eb';
+                    parent.style.color = 'white';
+                    parent.style.display = 'flex';
+                    parent.style.alignItems = 'center';
+                    parent.style.justifyContent = 'center';
+                    parent.style.fontWeight = '600';
+                });
+            });
+        });
+        
+        // ====================
+        // UTILITY FUNCTIONS
+        // ====================
+        
+        // Format date function
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        // Format time function
+        function formatTime(date) {
+            return new Date(date).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
+                type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+            } text-white`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${
+                        type === 'success' ? 'fa-check-circle' :
+                        type === 'error' ? 'fa-exclamation-circle' :
+                        type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'
+                    } mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+        
+        // Confirm dialog
+        function confirmAction(message, callback) {
+            if (confirm(message)) {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+                return true;
+            }
+            return false;
+        }
+        
+        // Toggle dark mode (example - would need additional CSS)
+        function toggleDarkMode() {
+            document.documentElement.setAttribute('data-theme', 
+                document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+            );
+            localStorage.setItem('theme', document.documentElement.getAttribute('data-theme'));
+        }
+        
+        // Initialize theme from localStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        
+        // ====================
+        // AJAX HELPER FUNCTIONS
+        // ====================
+        
+        // Generic AJAX function
+        function makeRequest(url, method = 'GET', data = null) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open(method, url);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            resolve(JSON.parse(xhr.responseText));
+                        } catch (e) {
+                            resolve(xhr.responseText);
+                        }
+                    } else {
+                        reject({
+                            status: xhr.status,
+                            statusText: xhr.statusText
+                        });
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    reject({
+                        status: xhr.status,
+                        statusText: xhr.statusText
+                    });
+                };
+                
+                xhr.send(data ? JSON.stringify(data) : null);
+            });
+        }
+        
+        // CSRF token for Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        const csrftoken = getCookie('csrftoken');
+        
+        // AJAX request with CSRF token
+        function makeAuthenticatedRequest(url, method = 'GET', data = null) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open(method, url);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            resolve(JSON.parse(xhr.responseText));
+                        } catch (e) {
+                            resolve(xhr.responseText);
+                        }
+                    } else {
+                        reject({
+                            status: xhr.status,
+                            statusText: xhr.statusText,
+                            response: xhr.responseText
+                        });
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    reject({
+                        status: xhr.status,
+                        statusText: xhr.statusText
+                    });
+                };
+                
+                xhr.send(data ? JSON.stringify(data) : null);
+            });
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

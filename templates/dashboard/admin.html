@@ -1,0 +1,777 @@
+<!-- templates/dashboard/admin.html -->
+{% extends 'admin_base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        /* Page Header */
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .page-header p {
+            color: var(--secondary-color);
+            margin-top: 0.25rem;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .stat-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .icon-blue { background: var(--primary-light); color: var(--primary-color); }
+        .icon-green { background: #e8f5e9; color: #10b981; }
+        .icon-orange { background: #fff3e0; color: #f59e0b; }
+        .icon-purple { background: #f3e5f5; color: #8b5cf6; }
+        .icon-red { background: #fee2e2; color: #ef4444; }
+        .icon-teal { background: #e0f2f1; color: #0d9488; }
+        
+        .stat-more {
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+        
+        .stat-title {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-change {
+            font-size: 0.75rem;
+        }
+        
+        .stat-change.positive {
+            color: #10b981;
+        }
+        
+        .stat-change.negative {
+            color: #ef4444;
+        }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .chart-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        /* Tables */
+        .table-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1rem;
+        }
+        
+        .table-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .table-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .table-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .table-action-btn {
+            background: none;
+            border: 1px solid #e2e8f0;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .table-action-btn:hover {
+            background: #f8fafc;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        .data-table thead {
+            background: #f8fafc;
+        }
+        
+        .data-table th {
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 500;
+            color: var(--dark-color);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .data-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--secondary-color);
+        }
+        
+        .data-table tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .status-pending { 
+            background: #fef3c7; 
+            color: #92400e; 
+        }
+        
+        .status-submitted { 
+            background: #dbeafe; 
+            color: #1e40af; 
+        }
+        
+        .status-verified { 
+            background: #d1fae5; 
+            color: #065f46; 
+        }
+        
+        .status-approved { 
+            background: #dcfce7; 
+            color: #166534; 
+        }
+        
+        .status-rejected { 
+            background: #fee2e2; 
+            color: #991b1b; 
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary-color);
+        }
+        
+        .empty-state-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #e2e8f0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Dashboard Overview</h1>
+        <p>Welcome back, {{ request.user.get_full_name }}. Here's what's happening with your DataPlus ERP today.</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-icon icon-blue">
+                    <i class="fas fa-store"></i>
+                </div>
+                <a href="{% url 'outlet_list' %}" class="stat-more">View all</a>
+            </div>
+            <div class="stat-title">Total Outlets</div>
+            <div class="stat-value">{{ total_outlets|default:"0" }}</div>
+            <div class="stat-change positive">Active outlets</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-icon icon-green">
+                    <i class="fas fa-box"></i>
+                </div>
+                <a href="{% url 'product_list' %}" class="stat-more">View all</a>
+            </div>
+            <div class="stat-title">Total Products</div>
+            <div class="stat-value">{{ total_products|default:"0" }}</div>
+            <div class="stat-change positive">Registered products</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-icon icon-purple">
+                    <i class="fas fa-users"></i>
+                </div>
+                <a href="{% url 'user_list' %}" class="stat-more">View all</a>
+            </div>
+            <div class="stat-title">Active Users</div>
+            <div class="stat-value">{{ total_users|default:"0" }}</div>
+            <div class="stat-change positive">System users</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-icon icon-orange">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <a href="{% url 'price_entry_list' %}" class="stat-more">View all</a>
+            </div>
+            <div class="stat-title">Prices Collected</div>
+            <div class="stat-value">{{ total_prices_collected|default:"0" }}</div>
+            <div class="stat-change positive">Last 30 days</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-icon icon-red">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <a href="{% url 'workflow_list' %}" class="stat-more">Review</a>
+            </div>
+            <div class="stat-title">Pending Approvals</div>
+            <div class="stat-value">{{ pending_approvals|default:"0" }}</div>
+            <div class="stat-change">Awaiting review</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-icon icon-teal">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <a href="{% url 'invoice_list' %}" class="stat-more">View all</a>
+            </div>
+            <div class="stat-title">Total Invoices</div>
+            <div class="stat-value">KES {{ total_invoices_amount|floatformat:2|default:"0.00" }}</div>
+            <div class="stat-change positive">Last 30 days</div>
+        </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+        <!-- Price Collection Trend -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3><i class="fas fa-chart-line mr-2"></i>Price Collection Trend (Last 30 Days)</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="pricesTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Prices by Status -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3><i class="fas fa-chart-bar mr-2"></i>Prices by Status</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Outlet Types Distribution -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3><i class="fas fa-store-alt mr-2"></i>Outlet Types Distribution</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="outletTypesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Zones -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3><i class="fas fa-map-marker-alt mr-2"></i>Top Zones by Outlets</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="zonesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- User Roles Distribution -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3><i class="fas fa-user-tag mr-2"></i>User Roles Distribution</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="userRolesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Invoice Trends -->
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3><i class="fas fa-money-check-alt mr-2"></i>Invoice Trends (Monthly)</h3>
+            </div>
+            <div class="chart-container">
+                <canvas id="invoiceTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="table-card">
+        <div class="table-card-header">
+            <h3><i class="fas fa-history mr-2"></i>Recent Activity</h3>
+            <div class="table-card-actions">
+                <a href="{% url 'audit_logs' %}" class="table-action-btn">
+                    <i class="fas fa-list"></i> View All
+                </a>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Description</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in recent_activities|slice:":5" %}
+                <tr>
+                    <td>{{ activity.user.get_full_name|default:activity.user.username }}</td>
+                    <td>
+                        <span class="status-badge status-{{ activity.action }}">
+                            <i class="fas {% if activity.action == 'create' %}fa-plus{% elif activity.action == 'update' %}fa-edit{% elif activity.action == 'delete' %}fa-trash{% elif activity.action == 'approve' %}fa-check{% elif activity.action == 'reject' %}fa-times{% else %}fa-info{% endif %}"></i>
+                            {{ activity.get_action_display }}
+                        </span>
+                    </td>
+                    <td>{{ activity.description|truncatechars:50 }}</td>
+                    <td>{{ activity.timestamp|timesince }} ago</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <p>No recent activities</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pending Approvals Table -->
+    <div class="table-card">
+        <div class="table-card-header">
+            <h3><i class="fas fa-clock mr-2"></i>Pending Price Approvals</h3>
+            <div class="table-card-actions">
+                <a href="{% url 'price_entry_list' %}?status=submitted" class="table-action-btn">
+                    <i class="fas fa-eye"></i> View All
+                </a>
+                <a href="{% url 'price_entry_list' %}" class="table-action-btn">
+                    <i class="fas fa-list"></i> All Prices
+                </a>
+            </div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Outlet</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Collected By</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in pending_price_entries|slice:":5" %}
+                <tr>
+                    <td>{{ entry.outlet_product.outlet.name }}</td>
+                    <td>{{ entry.outlet_product.product.product_name|truncatechars:20 }}</td>
+                    <td class="fw-medium">KES {{ entry.price }}</td>
+                    <td>{{ entry.collected_by.get_full_name|default:entry.collected_by.username }}</td>
+                    <td>{{ entry.collected_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="status-badge status-{{ entry.status }}">
+                            <i class="fas 
+                                {% if entry.status == 'draft' %}fa-pencil-alt
+                                {% elif entry.status == 'submitted' %}fa-paper-plane
+                                {% elif entry.status == 'verified' %}fa-check-circle
+                                {% elif entry.status == 'approved' %}fa-check-double
+                                {% else %}fa-times-circle{% endif %}">
+                            </i>
+                            {{ entry.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>No pending approvals</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart Colors using CSS variables
+        const chartColors = {
+            primary: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#2563eb',
+            secondary: getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim() || '#64748b',
+            success: getComputedStyle(document.documentElement).getPropertyValue('--success-color').trim() || '#10b981',
+            warning: getComputedStyle(document.documentElement).getPropertyValue('--warning-color').trim() || '#f59e0b',
+            danger: getComputedStyle(document.documentElement).getPropertyValue('--danger-color').trim() || '#ef4444'
+        };
+        
+        // Chart Configuration
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = chartColors.secondary;
+        
+        // Helper function to create gradient
+        function createGradient(ctx, color) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, color + '40');
+            gradient.addColorStop(1, color + '10');
+            return gradient;
+        }
+        
+        // Price Trend Line Chart
+        const priceTrendData = JSON.parse('{{ price_trend_data|safe|default:"[]" }}');
+        if (priceTrendData.length > 0) {
+            new Chart(document.getElementById('pricesTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: priceTrendData.map(d => d.date),
+                    datasets: [{
+                        label: 'Prices Collected',
+                        data: priceTrendData.map(d => d.count),
+                        borderColor: chartColors.primary,
+                        backgroundColor: createGradient(document.getElementById('pricesTrendChart').getContext('2d'), chartColors.primary),
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { color: '#f1f5f9' } }
+                    }
+                }
+            });
+        }
+        
+        // Status Bar Chart
+        const statusLabels = JSON.parse('{{ status_labels|safe|default:"[]" }}');
+        const statusCounts = JSON.parse('{{ status_counts|safe|default:"[]" }}');
+        if (statusLabels.length > 0) {
+            new Chart(document.getElementById('statusChart'), {
+                type: 'bar',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        label: 'Price Entries',
+                        data: statusCounts,
+                        backgroundColor: [
+                            chartColors.warning, // draft
+                            '#3b82f6', // submitted
+                            '#0ea5e9', // verified
+                            chartColors.success, // approved
+                            chartColors.danger  // rejected
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // Outlet Types Donut Chart
+        const outletTypeLabels = JSON.parse('{{ outlet_type_labels|safe|default:"[]" }}');
+        const outletTypeCounts = JSON.parse('{{ outlet_type_counts|safe|default:"[]" }}');
+        if (outletTypeLabels.length > 0) {
+            new Chart(document.getElementById('outletTypesChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: outletTypeLabels,
+                    datasets: [{
+                        data: outletTypeCounts,
+                        backgroundColor: [
+                            chartColors.primary,
+                            '#8b5cf6',
+                            '#06b6d4',
+                            '#10b981',
+                            chartColors.warning,
+                            chartColors.danger
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'right',
+                            labels: { padding: 20 }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+        
+        // Zones Bar Chart
+        const zoneLabels = JSON.parse('{{ zone_labels|safe|default:"[]" }}');
+        const zoneCounts = JSON.parse('{{ zone_counts|safe|default:"[]" }}');
+        if (zoneLabels.length > 0) {
+            new Chart(document.getElementById('zonesChart'), {
+                type: 'bar',
+                data: {
+                    labels: zoneLabels.slice(0, 10),
+                    datasets: [{
+                        label: 'Outlets',
+                        data: zoneCounts.slice(0, 10),
+                        backgroundColor: '#0d9488',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        // User Roles Donut Chart
+        const roleLabels = JSON.parse('{{ role_labels|safe|default:"[]" }}');
+        const roleCounts = JSON.parse('{{ role_counts|safe|default:"[]" }}');
+        if (roleLabels.length > 0) {
+            new Chart(document.getElementById('userRolesChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: roleLabels,
+                    datasets: [{
+                        data: roleCounts,
+                        backgroundColor: [
+                            '#7c3aed', // super_admin
+                            '#2563eb', // admin
+                            '#0d9488', // supervisor
+                            '#10b981', // data_entry
+                            '#f59e0b', // field_officer
+                            '#3b82f6', // analyst
+                            '#06b6d4', // accountant
+                            '#8b5cf6', // auditor
+                            '#ef4444', // manager
+                            '#64748b'  // viewer
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'right',
+                            labels: { padding: 20 }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+        
+        // Invoice Trend Line Chart
+        const invoiceTrend = JSON.parse('{{ invoice_trend|safe|default:"[]" }}');
+        if (invoiceTrend.length > 0) {
+            new Chart(document.getElementById('invoiceTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: invoiceTrend.map(d => d.month),
+                    datasets: [{
+                        label: 'Invoice Amount',
+                        data: invoiceTrend.map(d => d.amount),
+                        borderColor: '#10b981',
+                        backgroundColor: createGradient(document.getElementById('invoiceTrendChart').getContext('2d'), '#10b981'),
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: { grid: { color: '#f1f5f9' } }
+                    }
+                }
+            });
+        }
+        
+        // Initialize empty charts if no data
+        document.querySelectorAll('canvas').forEach(canvas => {
+            if (!canvas.chart) {
+                const ctx = canvas.getContext('2d');
+                ctx.font = '14px Inter';
+                ctx.fillStyle = chartColors.secondary;
+                ctx.textAlign = 'center';
+                ctx.fillText('No data available', canvas.width/2, canvas.height/2);
+            }
+        });
+    </script>
+{% endblock %}

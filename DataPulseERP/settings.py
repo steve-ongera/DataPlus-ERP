@@ -107,8 +107,58 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'erp_system.backends.EmailBackend',  # Replace 'your_app' with your actual app name
+    'django.contrib.auth.backends.ModelBackend',
+]
 
-STATIC_URL = 'static/'
+
+# Login/Logout URLs
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+# Session Settings
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True  # Set to True in production with HTTPS
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Security Settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+# Password Validation
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# Media Files Configuration (for uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'  # or os.path.join(BASE_DIR, 'media')
+
+# Static Files Configuration
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # or os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # or os.path.join(BASE_DIR, 'static')
+]
 AUTH_USER_MODEL = 'erp_system.User'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
