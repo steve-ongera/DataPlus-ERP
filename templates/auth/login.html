@@ -6,198 +6,301 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DataPlus ERP</title>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f1f5f9;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            color: var(--dark-color);
         }
 
         .login-container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
             max-width: 1000px;
             width: 100%;
             display: flex;
             min-height: 600px;
+            border: 1px solid #e2e8f0;
         }
 
         .login-left {
             flex: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 60px 40px;
-            color: white;
+            background: white;
+            padding: 3rem 2.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .login-left-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .logo-text .highlight {
+            color: var(--primary-color);
         }
 
         .login-left h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            line-height: 1.3;
         }
 
         .login-left p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            color: var(--secondary-color);
             line-height: 1.6;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
 
         .features {
             list-style: none;
+            margin-top: 1.5rem;
         }
 
         .features li {
-            padding: 12px 0;
+            padding: 0.75rem 0;
             display: flex;
             align-items: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            color: var(--dark-color);
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        .features li:before {
-            content: "✓";
-            margin-right: 15px;
-            font-size: 1.5rem;
-            font-weight: bold;
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .features li i {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+            font-size: 1rem;
         }
 
         .login-right {
             flex: 1;
-            padding: 60px 50px;
+            padding: 3rem 2.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            background: white;
         }
 
-        .logo-section {
+        .login-right-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 2.5rem;
         }
 
-        .logo-section h2 {
-            color: #333;
-            font-size: 2rem;
-            margin-bottom: 10px;
+        .login-right-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
         }
 
-        .logo-section p {
-            color: #666;
+        .login-right-header p {
+            color: var(--secondary-color);
             font-size: 0.95rem;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
             font-size: 0.95rem;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s;
+        .input-group {
+            position: relative;
         }
 
-        .form-group input:focus {
+        .input-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.2s;
+            background-color: white;
+            color: var(--dark-color);
+        }
+
+        .input-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
         }
 
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
         }
 
         .remember-me {
             display: flex;
             align-items: center;
-            font-size: 0.9rem;
-            color: #666;
+            color: var(--secondary-color);
         }
 
         .remember-me input {
-            margin-right: 8px;
-            width: 18px;
-            height: 18px;
+            margin-right: 0.5rem;
+            width: 16px;
+            height: 16px;
             cursor: pointer;
+            accent-color: var(--primary-color);
         }
 
         .forgot-password {
-            color: #667eea;
+            color: var(--primary-color);
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
         .forgot-password:hover {
+            color: var(--primary-dark);
             text-decoration: underline;
         }
 
         .btn-login {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0.875rem;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
         }
 
         .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            background-color: var(--primary-dark);
         }
 
         .btn-login:active {
-            transform: translateY(0);
+            transform: translateY(1px);
         }
 
         .alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
             font-size: 0.95rem;
             animation: slideDown 0.3s ease;
+            border: 1px solid transparent;
         }
 
         .alert-error {
-            background-color: #fee;
-            color: #c33;
-            border-left: 4px solid #c33;
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
         }
 
         .alert-success {
-            background-color: #efe;
-            color: #3c3;
-            border-left: 4px solid #3c3;
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border-color: #bbf7d0;
+        }
+
+        .alert-info {
+            background-color: #f0f9ff;
+            color: #0284c7;
+            border-color: #bae6fd;
+        }
+
+        .alert-warning {
+            background-color: #fffbeb;
+            color: #d97706;
+            border-color: #fde68a;
         }
 
         @keyframes slideDown {
@@ -211,21 +314,53 @@
             }
         }
 
+        /* System Info */
+        .system-info {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
+                min-height: auto;
             }
-
+            
             .login-left {
-                padding: 40px 30px;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                padding: 2rem 1.5rem;
             }
-
-            .login-left h1 {
-                font-size: 2rem;
-            }
-
+            
             .login-right {
-                padding: 40px 30px;
+                padding: 2rem 1.5rem;
+            }
+            
+            .features li {
+                padding: 0.5rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-left, .login-right {
+                padding: 1.5rem 1rem;
+            }
+            
+            .login-left h1 {
+                font-size: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -233,56 +368,91 @@
 <body>
     <div class="login-container">
         <div class="login-left">
-            <h1>DataPlus ERP</h1>
-            <p>Enterprise Resource Planning System for Advanced Statistical Data Collection & Analysis</p>
+            <div class="login-left-header">
+                <div class="logo">
+                    <div class="logo-icon">DP</div>
+                    <div class="logo-text"><span class="highlight">Data</span>Plus ERP</div>
+                </div>
+                <h1>Enterprise Resource Planning System</h1>
+                <p>Advanced Statistical Data Collection & Analysis Platform</p>
+            </div>
+            
             <ul class="features">
-                <li>Role-based Access Control</li>
-                <li>Real-time Data Validation</li>
-                <li>Advanced Reporting & Analytics</li>
-                <li>Comprehensive Audit Trail</li>
-                <li>Multi-currency Support</li>
+                <li><i class="bi bi-shield-check"></i> Role-based access control with multi-level permissions</li>
+                <li><i class="bi bi-file-text"></i> Complete document management with version control</li>
+                <li><i class="bi bi-graph-up"></i> Real-time data validation and quality assurance</li>
+                <li><i class="bi bi-bar-chart"></i> Advanced reporting and analytics engine</li>
+                <li><i class="bi bi-clock-history"></i> Comprehensive audit trail and compliance tracking</li>
             </ul>
+            
+            <div class="system-info">
+                <p>Version 2.0 • © {% now "Y" %} DataPlus ERP System</p>
+                <p>Enterprise-grade file management and digital workflows</p>
+            </div>
         </div>
 
         <div class="login-right">
-            <div class="logo-section">
+            <div class="login-right-header">
                 <h2>Welcome Back</h2>
-                <p>Please login to your account</p>
+                <p>Sign in to your account to continue</p>
             </div>
 
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }}">
+                        <i class="bi 
+                            {% if message.tags == 'error' %}bi-exclamation-circle
+                            {% elif message.tags == 'success' %}bi-check-circle
+                            {% elif message.tags == 'warning' %}bi-exclamation-triangle
+                            {% else %}bi-info-circle{% endif %}
+                        "></i>
                         {{ message }}
                     </div>
                 {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-error">
+                    <i class="bi bi-exclamation-circle"></i>
+                    Please enter a correct email and password. Note that both fields are case-sensitive.
+                </div>
             {% endif %}
 
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        placeholder="Enter your email"
-                        required
-                        autocomplete="email"
-                    >
+                    <label for="email">Email</label>
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your username or email"
+                            required
+                            autocomplete="email"
+                            autofocus
+                            value="{% if form.email.value %}{{ form.email.value }}{% endif %}"
+                        >
+                        
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                    >
+                    <div class="input-group">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-options">
@@ -293,9 +463,121 @@
                     <a href="#" class="forgot-password">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="btn-login">Login</button>
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <button type="submit" class="btn-login">
+                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                </button>
             </form>
+            
+            <div class="system-info">
+                <p><i class="bi bi-shield-lock"></i> Your session is protected with 256-bit SSL encryption</p>
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password toggle functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Toggle icon
+                    const icon = this.querySelector('i');
+                    if (type === 'password') {
+                        icon.classList.remove('bi-eye-slash');
+                        icon.classList.add('bi-eye');
+                    } else {
+                        icon.classList.remove('bi-eye');
+                        icon.classList.add('bi-eye-slash');
+                    }
+                });
+            }
+            
+            // Form validation
+            const loginForm = document.querySelector('form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    const email = document.getElementById('email');
+                    const password = document.getElementById('password');
+                    
+                    // Simple validation
+                    if (!email.value.trim()) {
+                        e.preventDefault();
+                        showAlert('Please enter your username or email', 'error');
+                        username.focus();
+                        return false;
+                    }
+                    
+                    if (!password.value.trim()) {
+                        e.preventDefault();
+                        showAlert('Please enter your password', 'error');
+                        password.focus();
+                        return false;
+                    }
+                    
+                    // Add loading state
+                    const submitBtn = this.querySelector('.btn-login');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Signing In...';
+                        submitBtn.disabled = true;
+                    }
+                });
+            }
+            
+            // Show alert function
+            function showAlert(message, type = 'info') {
+                // Remove existing alerts
+                const existingAlerts = document.querySelectorAll('.alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                // Create new alert
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type}`;
+                alertDiv.innerHTML = `
+                    <i class="bi 
+                        ${type === 'error' ? 'bi-exclamation-circle' :
+                          type === 'success' ? 'bi-check-circle' :
+                          type === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle'}
+                    "></i>
+                    ${message}
+                `;
+                
+                // Insert after login header
+                const loginHeader = document.querySelector('.login-right-header');
+                if (loginHeader) {
+                    loginHeader.parentNode.insertBefore(alertDiv, loginHeader.nextSibling);
+                }
+            }
+            
+            // Auto-focus username field
+            const usernameField = document.getElementById('username');
+            if (usernameField && !usernameField.value) {
+                usernameField.focus();
+            }
+            
+            // Enter key submits form
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                    const activeElement = document.activeElement;
+                    if (activeElement.tagName === 'INPUT' && activeElement.type !== 'submit') {
+                        e.preventDefault();
+                        loginForm.submit();
+                    }
+                }
+            });
+            
+            // Theme toggle (for future dark mode)
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        });
+    </script>
 </body>
 </html>
