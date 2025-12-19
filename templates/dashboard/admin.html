@@ -1,5 +1,6 @@
 <!-- templates/dashboard/admin.html -->
 {% extends 'admin_base.html' %}
+{% load humanize %}
 {% load static %}
 {% block content %}
     <style>
@@ -289,7 +290,7 @@
                 <a href="{% url 'outlet_list' %}" class="stat-more">View all</a>
             </div>
             <div class="stat-title">Total Outlets</div>
-            <div class="stat-value">{{ total_outlets|default:"0" }}</div>
+            <div class="stat-value">{{ total_outlets|default:"0"|intcomma  }}</div>
             <div class="stat-change positive">Active outlets</div>
         </div>
 
@@ -301,7 +302,7 @@
                 <a href="{% url 'product_list' %}" class="stat-more">View all</a>
             </div>
             <div class="stat-title">Total Products</div>
-            <div class="stat-value">{{ total_products|default:"0" }}</div>
+            <div class="stat-value">{{ total_products|default:"0" |intcomma }}</div>
             <div class="stat-change positive">Registered products</div>
         </div>
 
@@ -315,7 +316,7 @@
                 <a href="{% url 'price_entry_list' %}" class="stat-more">View all</a>
             </div>
             <div class="stat-title">Prices Collected</div>
-            <div class="stat-value">{{ total_prices_collected|default:"0" }}</div>
+            <div class="stat-value">{{ total_prices_collected|default:"0"|intcomma  }}</div>
             <div class="stat-change positive">Last 30 days</div>
         </div>
 
@@ -327,7 +328,7 @@
                 <a href="{% url 'workflow_list' %}" class="stat-more">Review</a>
             </div>
             <div class="stat-title">Pending Approvals</div>
-            <div class="stat-value">{{ pending_approvals|default:"0" }}</div>
+            <div class="stat-value">{{ pending_approvals|default:"0"|intcomma  }}</div>
             <div class="stat-change">Awaiting review</div>
         </div>
 
@@ -339,7 +340,7 @@
                 <a href="{% url 'invoice_list' %}" class="stat-more">View all</a>
             </div>
             <div class="stat-title">Total Invoices</div>
-            <div class="stat-value">KES {{ total_invoices_amount|floatformat:2|default:"0.00" }}</div>
+            <div class="stat-value">KES {{ total_invoices_amount|floatformat:2|default:"0.00"|intcomma  }}</div>
             <div class="stat-change positive">Last 30 days</div>
         </div>
     </div>
@@ -482,7 +483,7 @@
                 <tr>
                     <td>{{ entry.outlet_product.outlet.name }}</td>
                     <td>{{ entry.outlet_product.product.product_name|truncatechars:20 }}</td>
-                    <td class="fw-medium">KES {{ entry.price }}</td>
+                    <td class="fw-medium">KES {{ entry.price |intcomma }}</td>
                     <td>{{ entry.collected_by.get_full_name|default:entry.collected_by.username }}</td>
                     <td>{{ entry.collected_date|date:"M d, Y" }}</td>
                     <td>
